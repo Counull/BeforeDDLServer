@@ -6,6 +6,8 @@ Application::~Application() = default;
 
 int Application::run(const ServerConfig &serverConfig) {
 
+    std::cout << serverConfig.tencentApiConfig.secretId << std::endl;
+    std::cout << serverConfig.tencentApiConfig.secretKey << std::endl;
     createService();
     return 0;
 }

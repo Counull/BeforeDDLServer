@@ -7,17 +7,18 @@
 
 #include <string>
 #include <string_view>
+#include <utility>
 
 class NetworkConfig {
 public:
-    std::string_view ip;
+    std::string ip;
     u_int16_t port;
 
     //为json序列化提供默认值
     NetworkConfig() : ip("0.0.0.0"), port(50051) {}
 
-    NetworkConfig(const std::string_view &ip, int port)
-            : ip(ip), port(port) {}
+    NetworkConfig(std::string ip, int port)
+            : ip(std::move(ip)), port(port) {}
 
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const NetworkConfig &rhs) const = default;
@@ -26,8 +27,8 @@ public:
 
 class TencentApiConfig {
 public:
-    std::string_view secretId;
-    std::string_view secretKey;
+    std::string secretId;
+    std::string secretKey;
 
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const TencentApiConfig &rhs) const = default;

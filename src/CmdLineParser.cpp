@@ -33,7 +33,5 @@ void CmdLineParser::printHelp() {
 ServerConfig CmdLineParser::parseConfigFile(const std::string_view &configFilePath) {
     std::ifstream file(configFilePath.data());
     auto json = nlohmann::json::parse(file);
-    file.close();
     return json.template get<ServerConfig>();
-
 }

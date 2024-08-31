@@ -11,6 +11,9 @@ TEST(SampleTest, AssertionTrue) {
 
 /// Test for serialization
 TEST(SerilaizationTest, JsonConfig) {
+    //使用string_view要小心，因为string_view不会拷贝字符串，所以需要保证字符串的生命周期
+    //最好不要像我这样脱离string单独使用string_view，如果此处将jsonStr传递到函数外超过函数生命，
+    //那么jsonStr将会被销毁，string_view将会指向一个无效的字符串
     std::string_view jsonStr = R"({"ip":"10.31.7.7","port":8888})";
     NetworkConfig networkConfig{"10.31.7.7", 8888};
     //这里是string_view的话需要调用parse函数而不是隐式转换
