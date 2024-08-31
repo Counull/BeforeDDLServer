@@ -8,12 +8,7 @@
 #include <string>
 #include <string_view>
 
-
-
-
-
-
-class NetworkConfig  {
+class NetworkConfig {
 public:
     std::string_view ip;
     u_int16_t port;
@@ -23,6 +18,7 @@ public:
 
     NetworkConfig(const std::string_view &ipAddress, int port)
             : ip(ipAddress), port(port) {}
+
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const NetworkConfig &rhs) const = default;
 
@@ -32,6 +28,7 @@ class TencentApiConfig {
 public:
     std::string_view SecretId;
     std::string_view SecretKey;
+
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const TencentApiConfig &rhs) const = default;
 };
@@ -41,6 +38,7 @@ class ServerConfig {
 public:
     NetworkConfig networkConfig;
     TencentApiConfig tencentApiConfig;
+
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const ServerConfig &rhs) const = default;
 };

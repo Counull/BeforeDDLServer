@@ -15,12 +15,10 @@ public:
 
     int run(const ServerConfig &serverConfig);
 
-
 private:
     void createChannel();
 
     void createService();
-
 
 };
 
