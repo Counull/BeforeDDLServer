@@ -1,11 +1,24 @@
 #include "Application.h"
 
-Application::Application() {}
+Application::Application() = default;
 
-Application::~Application() {}
+Application::~Application() = default;
 
-int Application::run() {
-  // run 方法实现
-  std::cout << "Application is running" << std::endl;
-  return 0;
+int Application::run(const ServerConfig &serverConfig) {
+
+    createService();
+    return 0;
+}
+
+void Application::createService() {
+
+    Authority::AccountService accountService;
+
+}
+
+void Application::createChannel() {
+
+    auto channel = grpc::CreateChannel("0.0.0.0:50051", grpc::InsecureChannelCredentials());
+
+
 }
