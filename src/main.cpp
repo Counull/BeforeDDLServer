@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Current working directory: " << currentPath << std::endl;;
 
     Application app;
-    return app.run(std::move( CmdLineParser::parse(argc, argv)));
+    return app.run(CmdLineParser::parse(argc, argv));
 
 
 }
