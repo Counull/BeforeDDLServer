@@ -5,14 +5,18 @@
 #ifndef BEFOREDDLSERVER_CMDLINEPARASER_H
 #define BEFOREDDLSERVER_CMDLINEPARASER_H
 
+#include <iostream>
 #include "ConfigJsonSerialize.h"
+
 class CmdLineParser {
 
 public:
-   ServerConfig parse(int argc, char *argv[]);
+    static ServerConfig parse(int argc, char *argv[]);
+
 
 private:
-
+    static void printHelp();
+    static ServerConfig parseConfigFile(const std::string_view &configFilePath);
 };
 
 
