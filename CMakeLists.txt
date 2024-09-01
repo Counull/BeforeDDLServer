@@ -26,11 +26,9 @@ add_executable(BeforeDDLServer ${SOURCES} ${PROTO_SOURCES})
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
-
-target_link_libraries(BeforeDDLServerLib nlohmann_json::nlohmann_json gRPC::grpc++ protobuf::libprotobuf)
+target_link_libraries(BeforeDDLServerLib nlohmann_json::nlohmann_json)
+target_link_libraries(BeforeDDLServerLib gRPC::grpc++ protobuf::libprotobuf gRPC::grpc++_reflection)
 target_link_libraries(BeforeDDLServer BeforeDDLServerLib)
-
-
 
 
 #GTest 自动测试相关引用

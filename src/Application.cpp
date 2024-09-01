@@ -1,26 +1,34 @@
 #include "Application.h"
-
-Application::Application() = default;
+#include "AccountServiceImpl.h"
+#include "absl/log/initialize.h"
 
 Application::~Application() = default;
 
-int Application::run(const ServerConfig &serverConfig) {
 
-    std::cout << serverConfig.tencentApiConfig.secretId << std::endl;
-    std::cout << serverConfig.tencentApiConfig.secretKey << std::endl;
+int Application::run() {
+
+    absl::InitializeLog();
+    grpc::EnableDefaultHealthCheckService(true);
+    grpc::reflection::InitProtoReflectionServerBuilderPlugin();
+
     createService();
+
     return 0;
 }
 
 void Application::createService() {
 
-    Authority::AccountService accountService;
+    AccountServiceImpl accountService;
+
+    grpc::ServerBuilder builder;
+    builder.AddListeningPort(serverAddress, grpc::InsecureServerCredentials());
+    builder.RegisterService(&accountService);
+    pAccountService = builder.BuildAndStart();
+    std::cout << "Server listening on " << serverAddress << std::endl;
+    pAccountService->Wait();
 
 }
 
 void Application::createChannel() {
-
-    auto channel = grpc::CreateChannel("0.0.0.0:50051", grpc::InsecureChannelCredentials());
-
-
+    pChannel = grpc::CreateChannel(serverAddress, grpc::InsecureChannelCredentials());
 }

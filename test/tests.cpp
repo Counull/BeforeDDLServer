@@ -4,7 +4,7 @@
 
 TEST(SampleTest, AssertionTrue) {
 
-    Application application;
+
 
 //    ASSERT_TRUE(application.run(<#initializer#>) == 0);
 }
