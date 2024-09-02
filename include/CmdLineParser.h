@@ -13,7 +13,6 @@ class CmdLineParser {
 public:
     static ServerConfig parse(int argc, char *argv[]);
 
-
 private:
     static void printHelp();
     static ServerConfig parseConfigFile(const std::string_view &configFilePath);

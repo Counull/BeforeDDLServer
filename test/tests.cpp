@@ -2,12 +2,7 @@
 #include "Application.h"
 #include "ConfigJsonSerialize.h"
 
-TEST(SampleTest, AssertionTrue) {
 
-
-
-//    ASSERT_TRUE(application.run(<#initializer#>) == 0);
-}
 
 /// Test for serialization
 TEST(SerilaizationTest, JsonConfig) {
@@ -32,6 +27,10 @@ TEST(SerilaizationTest, JsonConfig) {
   "tencentApiConfig": {
     "secretId": "LSQ47C3424Vczx",
     "secretKey": "YSY7cbbDD2313"
+  },
+ "sslConfig": {
+    "certPath": "certificate.pem",
+    "keyPath": "private_key.pem"
   }
 }
 )";

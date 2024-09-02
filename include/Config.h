@@ -22,7 +22,6 @@ public:
 
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const NetworkConfig &rhs) const = default;
-
 };
 
 class TencentApiConfig {
@@ -32,14 +31,22 @@ public:
 
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const TencentApiConfig &rhs) const = default;
-
 };
 
+class SSLConfig {
+public:
+    std::string certPath;
+    std::string keyPath;
+
+    //为了方便测试，必须显示声明==运算符为default
+    bool operator==(const SSLConfig &rhs) const = default;
+};
 
 class ServerConfig {
 public:
     NetworkConfig networkConfig;
     TencentApiConfig tencentApiConfig;
+    SSLConfig sslConfig;
 
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const ServerConfig &rhs) const = default;

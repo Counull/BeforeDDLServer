@@ -9,10 +9,14 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/health_check_service_interface.h>
+#include <grpcpp/server.h>
 
 #include "ConfigJsonSerialize.h"
 #include "Authority.grpc.pb.h"
+#include "AccountServiceImpl.h"
+#include "absl/log/initialize.h"
 
+#include "Util.h"
 class Application {
 public:
     Application() = delete;
@@ -32,6 +36,7 @@ private:
     std::string serverAddress;
     std::shared_ptr<grpc::Channel> pChannel;
     std::unique_ptr<grpc::Server> pAccountService;
+    std::unique_ptr<grpc::Server> pHelloService;
 
     void createChannel();
 

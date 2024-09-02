@@ -11,7 +11,12 @@ AccountServiceImpl::~AccountServiceImpl() {
 grpc::Status AccountServiceImpl::Register(::grpc::ServerContext *context, const ::Authority::RegisterRequest *request,
                                           ::Authority::RegisterResponse *response) {
     std::cout << "Register called" << std::endl;
-    return Service::Register(context, request, response);
+    std::cout << "username: " << request->username() << std::endl;
+    std::cout << "phone number: " << request->phone_number() << std::endl;
+    std::cout << "password: " << request->password() << std::endl;
+    response->set_success(true);
+    response->set_message("Succeed!");
+    return grpc::Status::OK;
 }
 
 grpc::Status AccountServiceImpl::Login(::grpc::ServerContext *context, const ::Authority::LoginRequest *request,
