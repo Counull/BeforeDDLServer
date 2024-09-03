@@ -24,7 +24,7 @@ public:
 
     AliSmsSupport &operator=(const AliSmsSupport &) = delete;
 
-    AliSmsSupport(AliApiConfig apiConfig, SMSConfig smsConfig);
+    AliSmsSupport(const AliApiConfig &apiConfig, SMSConfig smsConfig);
 
     AliSmsSupport(AliSmsSupport &&other) noexcept;
 
@@ -44,7 +44,7 @@ private:
     static constexpr std::string_view ACTION = "SendSms";
 
     std::unique_ptr<AlibabaCloud::CommonClient> pClient;
-    AliApiConfig aliApiConfig;
+
     SMSConfig smsConfig;
 
     AlibabaCloud::CommonRequest createRequest(const std::string &phone, uint code) const;

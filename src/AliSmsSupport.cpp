@@ -7,8 +7,8 @@
 #include <memory>
 #include <utility>
 
-AliSmsSupport::AliSmsSupport(AliApiConfig apiConfig, SMSConfig smsConfig)
-        : aliApiConfig(std::move(apiConfig)), smsConfig(std::move(smsConfig)) {
+AliSmsSupport::AliSmsSupport(const AliApiConfig &apiConfig, SMSConfig smsConfig)
+        : smsConfig(std::move(smsConfig)) {
     AlibabaCloud::InitializeSdk();
     AlibabaCloud::ClientConfiguration configuration(REGION_ID.data());
     configuration.setConnectTimeout(1500);
