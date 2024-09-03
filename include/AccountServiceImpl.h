@@ -5,10 +5,15 @@
 #ifndef BEFOREDDLSERVER_ACCOUNTSERVICEIMPL_H
 #define BEFOREDDLSERVER_ACCOUNTSERVICEIMPL_H
 
+#include <optional>
 #include "Authority.grpc.pb.h"
+#include "AliSmsSupport.h"
 
 class AccountServiceImpl final : public Authority::AccountService::Service {
 public:
+
+    explicit AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig);
+
     ~AccountServiceImpl() override;
 
     grpc::Status Register(::grpc::ServerContext *context, const ::Authority::RegisterRequest *request,
@@ -22,6 +27,11 @@ public:
 
     grpc::Status VerifySmsCode(::grpc::ServerContext *context, const ::Authority::VerifySmsCodeRequest *request,
                                ::Authority::VerifySmsCodeResponse *response) override;
+
+private:
+    std::optional<AliSmsSupport> aliSmsSupport;
+    std::unordered_map<std::string, uint> registerPhoneCodeMap;
+    std::unordered_map<std::string, uint> loginPhoneCodeMap;
 };
 
 

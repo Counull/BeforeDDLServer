@@ -21,7 +21,7 @@ class Application {
 public:
     Application() = delete;
 
-    explicit Application(ServerConfig serverConfig) : serverConfig(std::move(serverConfig)) {
+    explicit Application(const ServerConfig &&serverConfig) : serverConfig(serverConfig) {
         serverAddress = std::move(
                 this->serverConfig.networkConfig.ip + ":" + std::to_string(this->serverConfig.networkConfig.port));
     };

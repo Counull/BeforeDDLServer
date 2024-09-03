@@ -15,17 +15,16 @@ int Application::run() {
 }
 
 void Application::createService() {
-    AccountServiceImpl accountService;
+    AccountServiceImpl accountService(serverConfig.aliApiConfig, serverConfig.smsConfig);
     grpc::ServerBuilder builder;
     grpc::SslServerCredentialsOptions sslOpts;
-    std::string privateKey = Util::readFile(serverConfig.sslConfig.keyPath);
-    std::string certificate = Util::readFile(serverConfig.sslConfig.certPath);
+    std::string privateKey = Util::ReadFile(serverConfig.sslConfig.keyPath);
+    std::string certificate = Util::ReadFile(serverConfig.sslConfig.certPath);
     sslOpts.pem_key_cert_pairs = {{privateKey, certificate}};
     builder.AddListeningPort(serverAddress, grpc::SslServerCredentials(sslOpts));
     builder.RegisterService(&accountService);
     builder.SetMaxReceiveMessageSize(std::numeric_limits<int>::max());
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-
     std::cout << "Server listening on " << serverAddress << std::endl;
 
     server->Wait();

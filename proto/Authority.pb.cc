@@ -52,9 +52,7 @@ inline constexpr VerifySmsCodeRequest::Impl_::Impl_(
       : phone_number_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        code_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
+        code_{0u},
         _cached_size_{0} {}
 
 template <typename>
@@ -98,6 +96,7 @@ inline constexpr SendSmsCodeRequest::Impl_::Impl_(
       : phone_number_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
+        purpose_{static_cast< ::Authority::SmsCodePurpose >(0)},
         _cached_size_{0} {}
 
 template <typename>
@@ -147,6 +146,7 @@ inline constexpr RegisterRequest::Impl_::Impl_(
         password_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
+        code_{0u},
         _cached_size_{0} {}
 
 template <typename>
@@ -196,6 +196,7 @@ inline constexpr LoginRequest::Impl_::Impl_(
         password_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
+        code_{0u},
         _cached_size_{0} {}
 
 template <typename>
@@ -212,8 +213,7 @@ struct LoginRequestDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LoginRequestDefaultTypeInternal _LoginRequest_default_instance_;
 }  // namespace Authority
-static constexpr const ::_pb::EnumDescriptor**
-    file_level_enum_descriptors_Authority_2eproto = nullptr;
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Authority_2eproto[1];
 static constexpr const ::_pb::ServiceDescriptor**
     file_level_service_descriptors_Authority_2eproto = nullptr;
 const ::uint32_t
@@ -228,6 +228,7 @@ const ::uint32_t
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::Authority::SendSmsCodeRequest, _impl_.phone_number_),
+        PROTOBUF_FIELD_OFFSET(::Authority::SendSmsCodeRequest, _impl_.purpose_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::Authority::SendSmsCodeResponse, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -269,6 +270,7 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::Authority::RegisterRequest, _impl_.phone_number_),
         PROTOBUF_FIELD_OFFSET(::Authority::RegisterRequest, _impl_.username_),
         PROTOBUF_FIELD_OFFSET(::Authority::RegisterRequest, _impl_.password_),
+        PROTOBUF_FIELD_OFFSET(::Authority::RegisterRequest, _impl_.code_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::Authority::RegisterResponse, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -289,6 +291,7 @@ const ::uint32_t
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::Authority::LoginRequest, _impl_.phone_number_),
         PROTOBUF_FIELD_OFFSET(::Authority::LoginRequest, _impl_.password_),
+        PROTOBUF_FIELD_OFFSET(::Authority::LoginRequest, _impl_.code_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::Authority::LoginResponse, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -305,13 +308,13 @@ const ::uint32_t
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, -1, -1, sizeof(::Authority::SendSmsCodeRequest)},
-        {9, -1, -1, sizeof(::Authority::SendSmsCodeResponse)},
-        {19, -1, -1, sizeof(::Authority::VerifySmsCodeRequest)},
-        {29, -1, -1, sizeof(::Authority::VerifySmsCodeResponse)},
-        {39, -1, -1, sizeof(::Authority::RegisterRequest)},
-        {50, -1, -1, sizeof(::Authority::RegisterResponse)},
-        {60, -1, -1, sizeof(::Authority::LoginRequest)},
-        {70, -1, -1, sizeof(::Authority::LoginResponse)},
+        {10, -1, -1, sizeof(::Authority::SendSmsCodeResponse)},
+        {20, -1, -1, sizeof(::Authority::VerifySmsCodeRequest)},
+        {30, -1, -1, sizeof(::Authority::VerifySmsCodeResponse)},
+        {40, -1, -1, sizeof(::Authority::RegisterRequest)},
+        {52, -1, -1, sizeof(::Authority::RegisterResponse)},
+        {62, -1, -1, sizeof(::Authority::LoginRequest)},
+        {73, -1, -1, sizeof(::Authority::LoginResponse)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::Authority::_SendSmsCodeRequest_default_instance_._instance,
@@ -325,33 +328,36 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_Authority_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\017Authority.proto\022\tAuthority\"*\n\022SendSmsC"
-    "odeRequest\022\024\n\014phone_number\030\001 \001(\t\"7\n\023Send"
-    "SmsCodeResponse\022\017\n\007success\030\001 \001(\010\022\017\n\007mess"
-    "age\030\002 \001(\t\":\n\024VerifySmsCodeRequest\022\024\n\014pho"
-    "ne_number\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\"9\n\025VerifyS"
-    "msCodeResponse\022\017\n\007success\030\001 \001(\010\022\017\n\007messa"
-    "ge\030\002 \001(\t\"K\n\017RegisterRequest\022\024\n\014phone_num"
-    "ber\030\001 \001(\t\022\020\n\010username\030\002 \001(\t\022\020\n\010password\030"
-    "\003 \001(\t\"4\n\020RegisterResponse\022\017\n\007success\030\001 \001"
-    "(\010\022\017\n\007message\030\002 \001(\t\"6\n\014LoginRequest\022\024\n\014p"
-    "hone_number\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"@\n\rL"
-    "oginResponse\022\017\n\007success\030\001 \001(\010\022\017\n\007message"
-    "\030\002 \001(\t\022\r\n\005token\030\003 \001(\t2\263\002\n\016AccountService"
-    "\022C\n\010Register\022\032.Authority.RegisterRequest"
-    "\032\033.Authority.RegisterResponse\022:\n\005Login\022\027"
-    ".Authority.LoginRequest\032\030.Authority.Logi"
-    "nResponse\022L\n\013SendSmsCode\022\035.Authority.Sen"
-    "dSmsCodeRequest\032\036.Authority.SendSmsCodeR"
-    "esponse\022R\n\rVerifySmsCode\022\037.Authority.Ver"
-    "ifySmsCodeRequest\032 .Authority.VerifySmsC"
-    "odeResponseb\006proto3"
+    "\n\017Authority.proto\022\tAuthority\"V\n\022SendSmsC"
+    "odeRequest\022\024\n\014phone_number\030\001 \001(\t\022*\n\007purp"
+    "ose\030\002 \001(\0162\031.Authority.SmsCodePurpose\"7\n\023"
+    "SendSmsCodeResponse\022\017\n\007success\030\001 \001(\010\022\017\n\007"
+    "message\030\002 \001(\t\":\n\024VerifySmsCodeRequest\022\024\n"
+    "\014phone_number\030\001 \001(\t\022\014\n\004code\030\002 \001(\r\"9\n\025Ver"
+    "ifySmsCodeResponse\022\017\n\007success\030\001 \001(\010\022\017\n\007m"
+    "essage\030\002 \001(\t\"Y\n\017RegisterRequest\022\024\n\014phone"
+    "_number\030\001 \001(\t\022\020\n\010username\030\002 \001(\t\022\020\n\010passw"
+    "ord\030\003 \001(\t\022\014\n\004code\030\004 \001(\r\"4\n\020RegisterRespo"
+    "nse\022\017\n\007success\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"D\n"
+    "\014LoginRequest\022\024\n\014phone_number\030\001 \001(\t\022\020\n\010p"
+    "assword\030\002 \001(\t\022\014\n\004code\030\004 \001(\r\"@\n\rLoginResp"
+    "onse\022\017\n\007success\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\022\r"
+    "\n\005token\030\003 \001(\t*6\n\016SmsCodePurpose\022\013\n\007UNKNO"
+    "WN\020\000\022\t\n\005LOGIN\020\001\022\014\n\010REGISTER\020\0022\263\002\n\016Accoun"
+    "tService\022C\n\010Register\022\032.Authority.Registe"
+    "rRequest\032\033.Authority.RegisterResponse\022:\n"
+    "\005Login\022\027.Authority.LoginRequest\032\030.Author"
+    "ity.LoginResponse\022L\n\013SendSmsCode\022\035.Autho"
+    "rity.SendSmsCodeRequest\032\036.Authority.Send"
+    "SmsCodeResponse\022R\n\rVerifySmsCode\022\037.Autho"
+    "rity.VerifySmsCodeRequest\032 .Authority.Ve"
+    "rifySmsCodeResponseb\006proto3"
 };
 static ::absl::once_flag descriptor_table_Authority_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_Authority_2eproto = {
     false,
     false,
-    819,
+    947,
     descriptor_table_protodef_Authority_2eproto,
     "Authority.proto",
     &descriptor_table_Authority_2eproto_once,
@@ -365,6 +371,15 @@ PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_Authority_2epr
     file_level_service_descriptors_Authority_2eproto,
 };
 namespace Authority {
+const ::google::protobuf::EnumDescriptor* SmsCodePurpose_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Authority_2eproto);
+  return file_level_enum_descriptors_Authority_2eproto[0];
+}
+PROTOBUF_CONSTINIT const uint32_t SmsCodePurpose_internal_data_[] = {
+    196608u, 0u, };
+bool SmsCodePurpose_IsValid(int value) {
+  return 0 <= value && value <= 2;
+}
 // ===================================================================
 
 class SendSmsCodeRequest::_Internal {
@@ -391,6 +406,7 @@ SendSmsCodeRequest::SendSmsCodeRequest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.purpose_ = from._impl_.purpose_;
 
   // @@protoc_insertion_point(copy_constructor:Authority.SendSmsCodeRequest)
 }
@@ -402,6 +418,7 @@ inline PROTOBUF_NDEBUG_INLINE SendSmsCodeRequest::Impl_::Impl_(
 
 inline void SendSmsCodeRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.purpose_ = {};
 }
 SendSmsCodeRequest::~SendSmsCodeRequest() {
   // @@protoc_insertion_point(destructor:Authority.SendSmsCodeRequest)
@@ -435,15 +452,15 @@ SendSmsCodeRequest::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 49, 2> SendSmsCodeRequest::_table_ = {
+const ::_pbi::TcParseTable<1, 2, 0, 49, 2> SendSmsCodeRequest::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    2, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967292,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    2,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_SendSmsCodeRequest_default_instance_._instance,
@@ -453,6 +470,9 @@ const ::_pbi::TcParseTable<0, 1, 0, 49, 2> SendSmsCodeRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::Authority::SendSmsCodeRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
+    // .Authority.SmsCodePurpose purpose = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SendSmsCodeRequest, _impl_.purpose_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(SendSmsCodeRequest, _impl_.purpose_)}},
     // string phone_number = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(SendSmsCodeRequest, _impl_.phone_number_)}},
@@ -462,6 +482,9 @@ const ::_pbi::TcParseTable<0, 1, 0, 49, 2> SendSmsCodeRequest::_table_ = {
     // string phone_number = 1;
     {PROTOBUF_FIELD_OFFSET(SendSmsCodeRequest, _impl_.phone_number_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .Authority.SmsCodePurpose purpose = 2;
+    {PROTOBUF_FIELD_OFFSET(SendSmsCodeRequest, _impl_.purpose_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
   }},
   // no aux_entries
   {{
@@ -479,6 +502,7 @@ PROTOBUF_NOINLINE void SendSmsCodeRequest::Clear() {
   (void) cached_has_bits;
 
   _impl_.phone_number_.ClearToEmpty();
+  _impl_.purpose_ = 0;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -495,6 +519,13 @@ PROTOBUF_NOINLINE void SendSmsCodeRequest::Clear() {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
         _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Authority.SendSmsCodeRequest.phone_number");
     target = stream->WriteStringMaybeAliased(1, _s, target);
+  }
+
+  // .Authority.SmsCodePurpose purpose = 2;
+  if (this->_internal_purpose() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+        2, this->_internal_purpose(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -514,10 +545,17 @@ PROTOBUF_NOINLINE void SendSmsCodeRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  ::_pbi::Prefetch5LinesFrom7Lines(reinterpret_cast<const void*>(this));
   // string phone_number = 1;
   if (!this->_internal_phone_number().empty()) {
     total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                     this->_internal_phone_number());
+  }
+
+  // .Authority.SmsCodePurpose purpose = 2;
+  if (this->_internal_purpose() != 0) {
+    total_size += 1 +
+                  ::_pbi::WireFormatLite::EnumSize(this->_internal_purpose());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -534,6 +572,9 @@ void SendSmsCodeRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, cons
 
   if (!from._internal_phone_number().empty()) {
     _this->_internal_set_phone_number(from._internal_phone_number());
+  }
+  if (from._internal_purpose() != 0) {
+    _this->_impl_.purpose_ = from._impl_.purpose_;
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -552,6 +593,7 @@ void SendSmsCodeRequest::InternalSwap(SendSmsCodeRequest* PROTOBUF_RESTRICT othe
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.phone_number_, &other->_impl_.phone_number_, arena);
+  swap(_impl_.purpose_, other->_impl_.purpose_);
 }
 
 ::google::protobuf::Metadata SendSmsCodeRequest::GetMetadata() const {
@@ -790,7 +832,6 @@ inline PROTOBUF_NDEBUG_INLINE VerifySmsCodeRequest::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
     const Impl_& from, const ::Authority::VerifySmsCodeRequest& from_msg)
       : phone_number_(arena, from.phone_number_),
-        code_(arena, from.code_),
         _cached_size_{0} {}
 
 VerifySmsCodeRequest::VerifySmsCodeRequest(
@@ -802,6 +843,7 @@ VerifySmsCodeRequest::VerifySmsCodeRequest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.code_ = from._impl_.code_;
 
   // @@protoc_insertion_point(copy_constructor:Authority.VerifySmsCodeRequest)
 }
@@ -809,11 +851,11 @@ inline PROTOBUF_NDEBUG_INLINE VerifySmsCodeRequest::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
       : phone_number_(arena),
-        code_(arena),
         _cached_size_{0} {}
 
 inline void VerifySmsCodeRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.code_ = {};
 }
 VerifySmsCodeRequest::~VerifySmsCodeRequest() {
   // @@protoc_insertion_point(destructor:Authority.VerifySmsCodeRequest)
@@ -823,7 +865,6 @@ VerifySmsCodeRequest::~VerifySmsCodeRequest() {
 inline void VerifySmsCodeRequest::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
   _impl_.phone_number_.Destroy();
-  _impl_.code_.Destroy();
   _impl_.~Impl_();
 }
 
@@ -848,7 +889,7 @@ VerifySmsCodeRequest::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 55, 2> VerifySmsCodeRequest::_table_ = {
+const ::_pbi::TcParseTable<1, 2, 0, 51, 2> VerifySmsCodeRequest::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
@@ -866,9 +907,9 @@ const ::_pbi::TcParseTable<1, 2, 0, 55, 2> VerifySmsCodeRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::Authority::VerifySmsCodeRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string code = 2;
-    {::_pbi::TcParser::FastUS1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(VerifySmsCodeRequest, _impl_.code_)}},
+    // uint32 code = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(VerifySmsCodeRequest, _impl_.code_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(VerifySmsCodeRequest, _impl_.code_)}},
     // string phone_number = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(VerifySmsCodeRequest, _impl_.phone_number_)}},
@@ -878,16 +919,15 @@ const ::_pbi::TcParseTable<1, 2, 0, 55, 2> VerifySmsCodeRequest::_table_ = {
     // string phone_number = 1;
     {PROTOBUF_FIELD_OFFSET(VerifySmsCodeRequest, _impl_.phone_number_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string code = 2;
+    // uint32 code = 2;
     {PROTOBUF_FIELD_OFFSET(VerifySmsCodeRequest, _impl_.code_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
   }},
   // no aux_entries
   {{
-    "\36\14\4\0\0\0\0\0"
+    "\36\14\0\0\0\0\0\0"
     "Authority.VerifySmsCodeRequest"
     "phone_number"
-    "code"
   }},
 };
 
@@ -899,7 +939,7 @@ PROTOBUF_NOINLINE void VerifySmsCodeRequest::Clear() {
   (void) cached_has_bits;
 
   _impl_.phone_number_.ClearToEmpty();
-  _impl_.code_.ClearToEmpty();
+  _impl_.code_ = 0u;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -918,12 +958,11 @@ PROTOBUF_NOINLINE void VerifySmsCodeRequest::Clear() {
     target = stream->WriteStringMaybeAliased(1, _s, target);
   }
 
-  // string code = 2;
-  if (!this->_internal_code().empty()) {
-    const std::string& _s = this->_internal_code();
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Authority.VerifySmsCodeRequest.code");
-    target = stream->WriteStringMaybeAliased(2, _s, target);
+  // uint32 code = 2;
+  if (this->_internal_code() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+        2, this->_internal_code(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -950,10 +989,10 @@ PROTOBUF_NOINLINE void VerifySmsCodeRequest::Clear() {
                                     this->_internal_phone_number());
   }
 
-  // string code = 2;
-  if (!this->_internal_code().empty()) {
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                    this->_internal_code());
+  // uint32 code = 2;
+  if (this->_internal_code() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+        this->_internal_code());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -971,8 +1010,8 @@ void VerifySmsCodeRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, co
   if (!from._internal_phone_number().empty()) {
     _this->_internal_set_phone_number(from._internal_phone_number());
   }
-  if (!from._internal_code().empty()) {
-    _this->_internal_set_code(from._internal_code());
+  if (from._internal_code() != 0) {
+    _this->_impl_.code_ = from._impl_.code_;
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -991,7 +1030,7 @@ void VerifySmsCodeRequest::InternalSwap(VerifySmsCodeRequest* PROTOBUF_RESTRICT 
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.phone_number_, &other->_impl_.phone_number_, arena);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.code_, &other->_impl_.code_, arena);
+        swap(_impl_.code_, other->_impl_.code_);
 }
 
 ::google::protobuf::Metadata VerifySmsCodeRequest::GetMetadata() const {
@@ -1243,6 +1282,7 @@ RegisterRequest::RegisterRequest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.code_ = from._impl_.code_;
 
   // @@protoc_insertion_point(copy_constructor:Authority.RegisterRequest)
 }
@@ -1256,6 +1296,7 @@ inline PROTOBUF_NDEBUG_INLINE RegisterRequest::Impl_::Impl_(
 
 inline void RegisterRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.code_ = {};
 }
 RegisterRequest::~RegisterRequest() {
   // @@protoc_insertion_point(destructor:Authority.RegisterRequest)
@@ -1291,15 +1332,15 @@ RegisterRequest::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 62, 2> RegisterRequest::_table_ = {
+const ::_pbi::TcParseTable<2, 4, 0, 62, 2> RegisterRequest::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_RegisterRequest_default_instance_._instance,
@@ -1309,7 +1350,9 @@ const ::_pbi::TcParseTable<2, 3, 0, 62, 2> RegisterRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::Authority::RegisterRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // uint32 code = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(RegisterRequest, _impl_.code_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.code_)}},
     // string phone_number = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.phone_number_)}},
@@ -1331,6 +1374,9 @@ const ::_pbi::TcParseTable<2, 3, 0, 62, 2> RegisterRequest::_table_ = {
     // string password = 3;
     {PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.password_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // uint32 code = 4;
+    {PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.code_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
   }},
   // no aux_entries
   {{
@@ -1352,6 +1398,7 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
   _impl_.phone_number_.ClearToEmpty();
   _impl_.username_.ClearToEmpty();
   _impl_.password_.ClearToEmpty();
+  _impl_.code_ = 0u;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -1384,6 +1431,13 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
         _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Authority.RegisterRequest.password");
     target = stream->WriteStringMaybeAliased(3, _s, target);
+  }
+
+  // uint32 code = 4;
+  if (this->_internal_code() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+        4, this->_internal_code(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1422,6 +1476,12 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
                                     this->_internal_password());
   }
 
+  // uint32 code = 4;
+  if (this->_internal_code() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+        this->_internal_code());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -1443,6 +1503,9 @@ void RegisterRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const :
   if (!from._internal_password().empty()) {
     _this->_internal_set_password(from._internal_password());
   }
+  if (from._internal_code() != 0) {
+    _this->_impl_.code_ = from._impl_.code_;
+  }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -1462,6 +1525,7 @@ void RegisterRequest::InternalSwap(RegisterRequest* PROTOBUF_RESTRICT other) {
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.phone_number_, &other->_impl_.phone_number_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.username_, &other->_impl_.username_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.password_, &other->_impl_.password_, arena);
+        swap(_impl_.code_, other->_impl_.code_);
 }
 
 ::google::protobuf::Metadata RegisterRequest::GetMetadata() const {
@@ -1712,6 +1776,7 @@ LoginRequest::LoginRequest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.code_ = from._impl_.code_;
 
   // @@protoc_insertion_point(copy_constructor:Authority.LoginRequest)
 }
@@ -1724,6 +1789,7 @@ inline PROTOBUF_NDEBUG_INLINE LoginRequest::Impl_::Impl_(
 
 inline void LoginRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.code_ = {};
 }
 LoginRequest::~LoginRequest() {
   // @@protoc_insertion_point(destructor:Authority.LoginRequest)
@@ -1758,15 +1824,15 @@ LoginRequest::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 51, 2> LoginRequest::_table_ = {
+const ::_pbi::TcParseTable<2, 3, 0, 51, 2> LoginRequest::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
+    4294967284,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
+    3,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_LoginRequest_default_instance_._instance,
@@ -1776,12 +1842,16 @@ const ::_pbi::TcParseTable<1, 2, 0, 51, 2> LoginRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::Authority::LoginRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string password = 2;
-    {::_pbi::TcParser::FastUS1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.password_)}},
+    // uint32 code = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(LoginRequest, _impl_.code_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.code_)}},
     // string phone_number = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.phone_number_)}},
+    // string password = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.password_)}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
@@ -1791,6 +1861,9 @@ const ::_pbi::TcParseTable<1, 2, 0, 51, 2> LoginRequest::_table_ = {
     // string password = 2;
     {PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.password_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // uint32 code = 4;
+    {PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.code_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
   }},
   // no aux_entries
   {{
@@ -1810,6 +1883,7 @@ PROTOBUF_NOINLINE void LoginRequest::Clear() {
 
   _impl_.phone_number_.ClearToEmpty();
   _impl_.password_.ClearToEmpty();
+  _impl_.code_ = 0u;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -1834,6 +1908,13 @@ PROTOBUF_NOINLINE void LoginRequest::Clear() {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
         _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Authority.LoginRequest.password");
     target = stream->WriteStringMaybeAliased(2, _s, target);
+  }
+
+  // uint32 code = 4;
+  if (this->_internal_code() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+        4, this->_internal_code(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1866,6 +1947,12 @@ PROTOBUF_NOINLINE void LoginRequest::Clear() {
                                     this->_internal_password());
   }
 
+  // uint32 code = 4;
+  if (this->_internal_code() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+        this->_internal_code());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -1883,6 +1970,9 @@ void LoginRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::go
   }
   if (!from._internal_password().empty()) {
     _this->_internal_set_password(from._internal_password());
+  }
+  if (from._internal_code() != 0) {
+    _this->_impl_.code_ = from._impl_.code_;
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1902,6 +1992,7 @@ void LoginRequest::InternalSwap(LoginRequest* PROTOBUF_RESTRICT other) {
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.phone_number_, &other->_impl_.phone_number_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.password_, &other->_impl_.password_, arena);
+        swap(_impl_.code_, other->_impl_.code_);
 }
 
 ::google::protobuf::Metadata LoginRequest::GetMetadata() const {

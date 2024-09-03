@@ -9,6 +9,7 @@
 #include <string_view>
 #include <utility>
 
+
 class NetworkConfig {
 public:
     std::string ip;
@@ -33,6 +34,25 @@ public:
     bool operator==(const TencentApiConfig &rhs) const = default;
 };
 
+class AliApiConfig {
+public:
+    std::string accessKeyId;
+    std::string accessKeySecret;
+
+    //为了方便测试，必须显示声明==运算符为default
+    bool operator==(const AliApiConfig &rhs) const = default;
+};
+
+
+class SMSConfig {
+public:
+    std::string signName;
+    std::string templateCode;
+
+    //为了方便测试，必须显示声明==运算符为default
+    bool operator==(const SMSConfig &rhs) const = default;
+};
+
 class SSLConfig {
 public:
     std::string certPath;
@@ -46,6 +66,8 @@ class ServerConfig {
 public:
     NetworkConfig networkConfig;
     TencentApiConfig tencentApiConfig;
+    AliApiConfig aliApiConfig;
+    SMSConfig smsConfig;
     SSLConfig sslConfig;
 
     //为了方便测试，必须显示声明==运算符为default
@@ -53,5 +75,6 @@ public:
 
 
 };
+
 
 #endif //BEFOREDDLSERVER_CONFIG_H

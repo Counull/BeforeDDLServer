@@ -27,6 +27,7 @@
 #include "google/protobuf/message.h"
 #include "google/protobuf/repeated_field.h"  // IWYU pragma: export
 #include "google/protobuf/extension_set.h"  // IWYU pragma: export
+#include "google/protobuf/generated_enum_reflection.h"
 #include "google/protobuf/unknown_field_set.h"
 // @@protoc_insertion_point(includes)
 
@@ -81,6 +82,40 @@ namespace protobuf {
 }  // namespace google
 
 namespace Authority {
+enum SmsCodePurpose : int {
+  UNKNOWN = 0,
+  LOGIN = 1,
+  REGISTER = 2,
+  SmsCodePurpose_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::min(),
+  SmsCodePurpose_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::max(),
+};
+
+bool SmsCodePurpose_IsValid(int value);
+extern const uint32_t SmsCodePurpose_internal_data_[];
+constexpr SmsCodePurpose SmsCodePurpose_MIN = static_cast<SmsCodePurpose>(0);
+constexpr SmsCodePurpose SmsCodePurpose_MAX = static_cast<SmsCodePurpose>(2);
+constexpr int SmsCodePurpose_ARRAYSIZE = 2 + 1;
+const ::google::protobuf::EnumDescriptor*
+SmsCodePurpose_descriptor();
+template <typename T>
+const std::string& SmsCodePurpose_Name(T value) {
+  static_assert(std::is_same<T, SmsCodePurpose>::value ||
+                    std::is_integral<T>::value,
+                "Incorrect type passed to SmsCodePurpose_Name().");
+  return SmsCodePurpose_Name(static_cast<SmsCodePurpose>(value));
+}
+template <>
+inline const std::string& SmsCodePurpose_Name(SmsCodePurpose value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<SmsCodePurpose_descriptor,
+                                                 0, 2>(
+      static_cast<int>(value));
+}
+inline bool SmsCodePurpose_Parse(absl::string_view name, SmsCodePurpose* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SmsCodePurpose>(
+      SmsCodePurpose_descriptor(), name, value);
+}
 
 // ===================================================================
 
@@ -419,20 +454,14 @@ class VerifySmsCodeRequest final : public ::google::protobuf::Message
   std::string* _internal_mutable_phone_number();
 
   public:
-  // string code = 2;
+  // uint32 code = 2;
   void clear_code() ;
-  const std::string& code() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_code(Arg_&& arg, Args_... args);
-  std::string* mutable_code();
-  PROTOBUF_NODISCARD std::string* release_code();
-  void set_allocated_code(std::string* value);
+  ::uint32_t code() const;
+  void set_code(::uint32_t value);
 
   private:
-  const std::string& _internal_code() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_code(
-      const std::string& value);
-  std::string* _internal_mutable_code();
+  ::uint32_t _internal_code() const;
+  void _internal_set_code(::uint32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:Authority.VerifySmsCodeRequest)
@@ -441,7 +470,7 @@ class VerifySmsCodeRequest final : public ::google::protobuf::Message
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
       1, 2, 0,
-      55, 2>
+      51, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -462,7 +491,7 @@ class VerifySmsCodeRequest final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const VerifySmsCodeRequest& from_msg);
     ::google::protobuf::internal::ArenaStringPtr phone_number_;
-    ::google::protobuf::internal::ArenaStringPtr code_;
+    ::uint32_t code_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -785,6 +814,7 @@ class SendSmsCodeRequest final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kPhoneNumberFieldNumber = 1,
+    kPurposeFieldNumber = 2,
   };
   // string phone_number = 1;
   void clear_phone_number() ;
@@ -802,12 +832,22 @@ class SendSmsCodeRequest final : public ::google::protobuf::Message
   std::string* _internal_mutable_phone_number();
 
   public:
+  // .Authority.SmsCodePurpose purpose = 2;
+  void clear_purpose() ;
+  ::Authority::SmsCodePurpose purpose() const;
+  void set_purpose(::Authority::SmsCodePurpose value);
+
+  private:
+  ::Authority::SmsCodePurpose _internal_purpose() const;
+  void _internal_set_purpose(::Authority::SmsCodePurpose value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Authority.SendSmsCodeRequest)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
+      1, 2, 0,
       49, 2>
       _table_;
 
@@ -829,6 +869,7 @@ class SendSmsCodeRequest final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const SendSmsCodeRequest& from_msg);
     ::google::protobuf::internal::ArenaStringPtr phone_number_;
+    int purpose_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1153,6 +1194,7 @@ class RegisterRequest final : public ::google::protobuf::Message
     kPhoneNumberFieldNumber = 1,
     kUsernameFieldNumber = 2,
     kPasswordFieldNumber = 3,
+    kCodeFieldNumber = 4,
   };
   // string phone_number = 1;
   void clear_phone_number() ;
@@ -1202,12 +1244,22 @@ class RegisterRequest final : public ::google::protobuf::Message
   std::string* _internal_mutable_password();
 
   public:
+  // uint32 code = 4;
+  void clear_code() ;
+  ::uint32_t code() const;
+  void set_code(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_code() const;
+  void _internal_set_code(::uint32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Authority.RegisterRequest)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 3, 0,
+      2, 4, 0,
       62, 2>
       _table_;
 
@@ -1231,6 +1283,7 @@ class RegisterRequest final : public ::google::protobuf::Message
     ::google::protobuf::internal::ArenaStringPtr phone_number_;
     ::google::protobuf::internal::ArenaStringPtr username_;
     ::google::protobuf::internal::ArenaStringPtr password_;
+    ::uint32_t code_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1572,6 +1625,7 @@ class LoginRequest final : public ::google::protobuf::Message
   enum : int {
     kPhoneNumberFieldNumber = 1,
     kPasswordFieldNumber = 2,
+    kCodeFieldNumber = 4,
   };
   // string phone_number = 1;
   void clear_phone_number() ;
@@ -1605,12 +1659,22 @@ class LoginRequest final : public ::google::protobuf::Message
   std::string* _internal_mutable_password();
 
   public:
+  // uint32 code = 4;
+  void clear_code() ;
+  ::uint32_t code() const;
+  void set_code(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_code() const;
+  void _internal_set_code(::uint32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Authority.LoginRequest)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      1, 2, 0,
+      2, 3, 0,
       51, 2>
       _table_;
 
@@ -1633,6 +1697,7 @@ class LoginRequest final : public ::google::protobuf::Message
                           const LoginRequest& from_msg);
     ::google::protobuf::internal::ArenaStringPtr phone_number_;
     ::google::protobuf::internal::ArenaStringPtr password_;
+    ::uint32_t code_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1704,6 +1769,28 @@ inline void SendSmsCodeRequest::set_allocated_phone_number(std::string* value) {
         }
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:Authority.SendSmsCodeRequest.phone_number)
+}
+
+// .Authority.SmsCodePurpose purpose = 2;
+inline void SendSmsCodeRequest::clear_purpose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.purpose_ = 0;
+}
+inline ::Authority::SmsCodePurpose SendSmsCodeRequest::purpose() const {
+  // @@protoc_insertion_point(field_get:Authority.SendSmsCodeRequest.purpose)
+  return _internal_purpose();
+}
+inline void SendSmsCodeRequest::set_purpose(::Authority::SmsCodePurpose value) {
+  _internal_set_purpose(value);
+  // @@protoc_insertion_point(field_set:Authority.SendSmsCodeRequest.purpose)
+}
+inline ::Authority::SmsCodePurpose SendSmsCodeRequest::_internal_purpose() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::Authority::SmsCodePurpose>(_impl_.purpose_);
+}
+inline void SendSmsCodeRequest::_internal_set_purpose(::Authority::SmsCodePurpose value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.purpose_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1836,54 +1923,26 @@ inline void VerifySmsCodeRequest::set_allocated_phone_number(std::string* value)
   // @@protoc_insertion_point(field_set_allocated:Authority.VerifySmsCodeRequest.phone_number)
 }
 
-// string code = 2;
+// uint32 code = 2;
 inline void VerifySmsCodeRequest::clear_code() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.code_.ClearToEmpty();
+  _impl_.code_ = 0u;
 }
-inline const std::string& VerifySmsCodeRequest::code() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline ::uint32_t VerifySmsCodeRequest::code() const {
   // @@protoc_insertion_point(field_get:Authority.VerifySmsCodeRequest.code)
   return _internal_code();
 }
-template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void VerifySmsCodeRequest::set_code(Arg_&& arg,
-                                                     Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.code_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+inline void VerifySmsCodeRequest::set_code(::uint32_t value) {
+  _internal_set_code(value);
   // @@protoc_insertion_point(field_set:Authority.VerifySmsCodeRequest.code)
 }
-inline std::string* VerifySmsCodeRequest::mutable_code() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_code();
-  // @@protoc_insertion_point(field_mutable:Authority.VerifySmsCodeRequest.code)
-  return _s;
-}
-inline const std::string& VerifySmsCodeRequest::_internal_code() const {
+inline ::uint32_t VerifySmsCodeRequest::_internal_code() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.code_.Get();
+  return _impl_.code_;
 }
-inline void VerifySmsCodeRequest::_internal_set_code(const std::string& value) {
+inline void VerifySmsCodeRequest::_internal_set_code(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.code_.Set(value, GetArena());
-}
-inline std::string* VerifySmsCodeRequest::_internal_mutable_code() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.code_.Mutable( GetArena());
-}
-inline std::string* VerifySmsCodeRequest::release_code() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:Authority.VerifySmsCodeRequest.code)
-  return _impl_.code_.Release();
-}
-inline void VerifySmsCodeRequest::set_allocated_code(std::string* value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.code_.SetAllocated(value, GetArena());
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.code_.IsDefault()) {
-          _impl_.code_.Set("", GetArena());
-        }
-  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:Authority.VerifySmsCodeRequest.code)
+  _impl_.code_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -2116,6 +2175,28 @@ inline void RegisterRequest::set_allocated_password(std::string* value) {
   // @@protoc_insertion_point(field_set_allocated:Authority.RegisterRequest.password)
 }
 
+// uint32 code = 4;
+inline void RegisterRequest::clear_code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.code_ = 0u;
+}
+inline ::uint32_t RegisterRequest::code() const {
+  // @@protoc_insertion_point(field_get:Authority.RegisterRequest.code)
+  return _internal_code();
+}
+inline void RegisterRequest::set_code(::uint32_t value) {
+  _internal_set_code(value);
+  // @@protoc_insertion_point(field_set:Authority.RegisterRequest.code)
+}
+inline ::uint32_t RegisterRequest::_internal_code() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.code_;
+}
+inline void RegisterRequest::_internal_set_code(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.code_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // RegisterResponse
@@ -2296,6 +2377,28 @@ inline void LoginRequest::set_allocated_password(std::string* value) {
   // @@protoc_insertion_point(field_set_allocated:Authority.LoginRequest.password)
 }
 
+// uint32 code = 4;
+inline void LoginRequest::clear_code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.code_ = 0u;
+}
+inline ::uint32_t LoginRequest::code() const {
+  // @@protoc_insertion_point(field_get:Authority.LoginRequest.code)
+  return _internal_code();
+}
+inline void LoginRequest::set_code(::uint32_t value) {
+  _internal_set_code(value);
+  // @@protoc_insertion_point(field_set:Authority.LoginRequest.code)
+}
+inline ::uint32_t LoginRequest::_internal_code() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.code_;
+}
+inline void LoginRequest::_internal_set_code(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.code_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // LoginResponse
@@ -2429,6 +2532,19 @@ inline void LoginResponse::set_allocated_token(std::string* value) {
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace Authority
 
+
+namespace google {
+namespace protobuf {
+
+template <>
+struct is_proto_enum<::Authority::SmsCodePurpose> : std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor<::Authority::SmsCodePurpose>() {
+  return ::Authority::SmsCodePurpose_descriptor();
+}
+
+}  // namespace protobuf
+}  // namespace google
 
 // @@protoc_insertion_point(global_scope)
 

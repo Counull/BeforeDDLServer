@@ -14,6 +14,6 @@ int main(int argc, char *argv[]) {
     std::cout << "Current working directory: " << currentPath << std::endl;;
 
     auto config = CmdLineParser::parse(argc, argv);
-    Application app(config);
+    Application app(std::move(config));
     return app.run();
 }
