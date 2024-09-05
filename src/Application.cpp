@@ -7,17 +7,12 @@
 Application::~Application() = default;
 
 
-template<IsServerConfig T>
-Application::Application(T &&serverConfig) noexcept:serverConfig(std::forward<T>(serverConfig)) {
-
-}
 
 int Application::run() {
 
     absl::InitializeLog();
     grpc::EnableDefaultHealthCheckService(true);
     grpc::reflection::InitProtoReflectionServerBuilderPlugin();
-    serverAddress = std::format("{}:{}", this->serverConfig.networkConfig.ip, this->serverConfig.networkConfig.port);
     createService();
     return 0;
 }

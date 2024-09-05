@@ -29,7 +29,11 @@ public:
     Application(Application &&other) noexcept = default;
 
     template<IsServerConfig T>
-    explicit Application(T &&serverConfig) noexcept;
+    explicit Application(T &&serverConfig) noexcept:serverConfig(std::forward<T>(serverConfig)) {
+        serverAddress = std::format("{}:{}", this->serverConfig.networkConfig.ip,
+                                    this->serverConfig.networkConfig.port);
+    }
+
 
     ~Application();
 
