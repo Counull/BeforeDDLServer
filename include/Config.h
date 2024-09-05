@@ -70,6 +70,7 @@ public:
     SMSConfig smsConfig;
     SSLConfig sslConfig;
 
+
     //为了方便测试，必须显示声明==运算符为default
     bool operator==(const ServerConfig &rhs) const = default;
 

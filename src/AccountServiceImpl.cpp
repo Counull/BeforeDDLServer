@@ -5,9 +5,12 @@
 #include "AccountServiceImpl.h"
 #include "Util.h"
 
-AccountServiceImpl::~AccountServiceImpl() {
 
+AccountServiceImpl::AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig) : aliSmsSupport(
+        std::make_optional<AliSmsSupport>(apiConfig, smsConfig)) {
 }
+
+AccountServiceImpl::~AccountServiceImpl() = default;
 
 grpc::Status AccountServiceImpl::Register(::grpc::ServerContext *context, const ::Authority::RegisterRequest *request,
                                           ::Authority::RegisterResponse *response) {
@@ -82,9 +85,6 @@ AccountServiceImpl::VerifySmsCode(::grpc::ServerContext *context, const ::Author
     return Service::VerifySmsCode(context, request, response);
 }
 
-AccountServiceImpl::AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig) : aliSmsSupport(
-        std::make_optional<AliSmsSupport>(apiConfig, smsConfig)) {
-}
 
 
 

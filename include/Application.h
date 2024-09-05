@@ -17,14 +17,19 @@
 #include "absl/log/initialize.h"
 
 #include "Util.h"
+
+template<typename T>
+concept IsServerConfig = std::is_same_v<std::decay_t<T>, ServerConfig>;
+
 class Application {
 public:
     Application() = delete;
 
-    explicit Application(const ServerConfig &&serverConfig) : serverConfig(serverConfig) {
-        serverAddress = std::move(
-                this->serverConfig.networkConfig.ip + ":" + std::to_string(this->serverConfig.networkConfig.port));
-    };
+
+    Application(Application &&other) noexcept = default;
+
+    template<IsServerConfig T>
+    explicit Application(T &&serverConfig) noexcept;
 
     ~Application();
 
@@ -38,7 +43,6 @@ private:
     std::unique_ptr<grpc::Server> pAccountService;
     std::unique_ptr<grpc::Server> pHelloService;
 
-    void createChannel();
 
     void createService();
 

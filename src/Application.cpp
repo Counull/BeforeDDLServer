@@ -1,15 +1,23 @@
 #include "Application.h"
 
+#include <utility>
+
 #include "absl/flags/flag.h"
 
 Application::~Application() = default;
 
+
+template<IsServerConfig T>
+Application::Application(T &&serverConfig) noexcept:serverConfig(std::forward<T>(serverConfig)) {
+
+}
 
 int Application::run() {
 
     absl::InitializeLog();
     grpc::EnableDefaultHealthCheckService(true);
     grpc::reflection::InitProtoReflectionServerBuilderPlugin();
+    serverAddress = std::format("{}:{}", this->serverConfig.networkConfig.ip, this->serverConfig.networkConfig.port);
     createService();
     return 0;
 }
@@ -23,14 +31,14 @@ void Application::createService() {
     sslOpts.pem_key_cert_pairs = {{privateKey, certificate}};
     builder.AddListeningPort(serverAddress, grpc::SslServerCredentials(sslOpts));
     builder.RegisterService(&accountService);
-    builder.SetMaxReceiveMessageSize(std::numeric_limits<int>::max());
-    std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
+    auto server = builder.BuildAndStart();
     std::cout << "Server listening on " << serverAddress << std::endl;
-
     server->Wait();
-    //pHelloService->Wait();
 }
 
-void Application::createChannel() {
-    pChannel = grpc::CreateChannel(serverAddress, grpc::InsecureChannelCredentials());
-}
+
+
+
+
+
+

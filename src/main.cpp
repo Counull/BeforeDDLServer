@@ -13,7 +13,8 @@ int main(int argc, char *argv[]) {
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::cout << "Current working directory: " << currentPath << std::endl;;
 
-    auto config = CmdLineParser::parse(argc, argv);
-    Application app(std::move(config));
+    Application app(CmdLineParser::parse(argc, argv));
+
+
     return app.run();
 }
