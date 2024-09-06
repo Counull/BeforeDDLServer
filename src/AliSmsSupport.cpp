@@ -21,21 +21,6 @@ AliSmsSupport::AliSmsSupport(const AliApiConfig &apiConfig, SMSConfig smsConfig)
 }
 
 
-void AliSmsSupport::sendSmsAsync(const std::string &phone, uint code) {
-
-    pClient->commonResponseAsync(createRequest(phone, code), [phone, code](const AlibabaCloud::CommonClient *client,
-                                                                           const AlibabaCloud::CommonRequest &request,
-                                                                           const AlibabaCloud::CommonClient::CommonResponseOutcome &outcome,
-                                                                           const std::shared_ptr<const AlibabaCloud::AsyncCallerContext> &context) {
-        std::cout << "SendSmsAsyncCallBack: " << phone << " " << code << std::endl;
-        if (outcome.isSuccess()) {
-            std::cout << "Request succeeded: " << outcome.result().payload() << std::endl;
-        } else {
-            std::cerr << "Request failed: " << outcome.error().errorMessage() << std::endl;
-        }
-    });
-}
-
 AliSmsSupport::AliSmsSupport(AliSmsSupport &&other) noexcept
         : smsConfig(std::move(other.smsConfig)), pClient(std::move(other.pClient)) {
     other.pClient = nullptr;
@@ -80,6 +65,26 @@ AlibabaCloud::CommonRequest AliSmsSupport::createRequest(const std::string &phon
     request.setQueryParameter("TemplateParam", templateParam);
     std::cout << "SendSms: " << phone << " " << code << std::endl;
     return request;
+}
+
+void AliSmsSupport::sendSmsAsync(const std::string &phone, uint code,
+                                 std::function<void(std::string, uint)> &&callback) {
+    std::cout << "Current function: " << __func__ << std::endl;
+
+    pClient->commonResponseAsync(
+            createRequest(phone, code),
+            [phone, code, callback](const AlibabaCloud::CommonClient *client,
+                                    const AlibabaCloud::CommonRequest &request,
+                                    const AlibabaCloud::CommonClient::CommonResponseOutcome &outcome,
+                                    const std::shared_ptr<const AlibabaCloud::AsyncCallerContext> &context) {
+                std::cout << "SendSmsAsyncCallBack: " << phone << " " << code << std::endl;
+                if (outcome.isSuccess()) {
+                    callback(phone, code);
+                    std::cout << "Request succeeded: " << outcome.result().payload() << std::endl;
+                } else {
+                    std::cerr << "Request failed: " << outcome.error().errorMessage() << std::endl;
+                }
+            });
 }
 
 

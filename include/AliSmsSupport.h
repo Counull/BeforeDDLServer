@@ -33,7 +33,7 @@ public:
     ~AliSmsSupport();
 
 
-    void sendSmsAsync(const std::string &phone, uint code);
+    void sendSmsAsync(const std::string &phone, uint code, std::function<void(std::string, uint)> &&callback);
 
     bool SendSms(const std::string &phone, uint code);
 

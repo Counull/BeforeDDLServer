@@ -10,16 +10,13 @@ AccountServiceImpl::AccountServiceImpl(const AliApiConfig &apiConfig, const SMSC
         std::make_optional<AliSmsSupport>(apiConfig, smsConfig)) {
 }
 
-AccountServiceImpl::~AccountServiceImpl() = default;
+AccountServiceImpl::~AccountServiceImpl() { std::cout << "Current function: " << __func__ << std::endl; };
 
 grpc::Status AccountServiceImpl::Register(::grpc::ServerContext *context, const ::Authority::RegisterRequest *request,
                                           ::Authority::RegisterResponse *response) {
-    std::cout << "Register called" << std::endl;
-    std::cout << "username: " << request->username() << std::endl;
-    std::cout << "phone number: " << request->phone_number() << std::endl;
-    std::cout << "password: " << request->password() << std::endl;
-    std::cout << "code: " << request->code() << std::endl;
-    if (auto kv = registerPhoneCodeMap.find(request->phone_number()); kv == registerPhoneCodeMap.end()) {
+
+    std::cout << request->DebugString() << std::endl;
+    if (auto kv = phoneCodeMap.find(request->phone_number()); kv == phoneCodeMap.end()) {
         response->set_success(false);
         response->set_message("SMS code not sent");
         return grpc::Status::CANCELLED;
@@ -30,7 +27,7 @@ grpc::Status AccountServiceImpl::Register(::grpc::ServerContext *context, const 
     } else {
         response->set_success(true);
         response->set_message("Succeed!");
-        registerPhoneCodeMap.erase(kv->first);
+        phoneCodeMap.erase(kv->first);
         return grpc::Status::OK;
         //TODO DB operation
     };
@@ -48,29 +45,14 @@ grpc::Status
 AccountServiceImpl::SendSmsCode(::grpc::ServerContext *context, const ::Authority::SendSmsCodeRequest *request,
                                 ::Authority::SendSmsCodeResponse *response) {
 
-    //Check sms service available
-    if (!aliSmsSupport.has_value()) {
-        response->set_success(false);
-        response->set_message("Sms service not available");
-        return grpc::Status::CANCELLED;
-    }
-    //Check purpose
-    if (request->purpose() == Authority::SmsCodePurpose::UNKNOWN) {
-        response->set_success(false);
-        response->set_message("Witch purpose do you want to use this code?");
-        return grpc::Status::CANCELLED;
-    }
-    if (!Util::IsValidPhoneNumber(request->phone_number())) {
-        response->set_success(false);
-        response->set_message("Phone number not valid");
+
+    if (!CheckSendSmsRequest(request, response)) {
         return grpc::Status::CANCELLED;
     }
 
     //Generate code
     auto code = Util::GenerateSixDigitRandomNumber();
     if (aliSmsSupport.value().SendSms(request->phone_number(), code)) {
-        auto &phoneCodeMap =
-                request->purpose() == Authority::SmsCodePurpose::LOGIN ? loginPhoneCodeMap : registerPhoneCodeMap;
         phoneCodeMap.emplace(request->phone_number(), code);
         return grpc::Status::OK;
     } else {
@@ -79,11 +61,85 @@ AccountServiceImpl::SendSmsCode(::grpc::ServerContext *context, const ::Authorit
 
 }
 
+grpc::ServerUnaryReactor *
+AccountServiceImpl::SendSmsCode(::grpc::CallbackServerContext *context, const ::Authority::SendSmsCodeRequest *request,
+                                ::Authority::SendSmsCodeResponse *response) {
+
+    grpc::ServerUnaryReactor *reactor = context->DefaultReactor();
+    if (!CheckSendSmsRequest(request, response)) {
+        reactor->Finish(grpc::Status::CANCELLED);
+    }
+
+    //Generate code
+    auto code = Util::GenerateSixDigitRandomNumber();
+    std::weak_ptr<AccountServiceImpl> weakThis = shared_from_this();
+
+    auto callback = [reactor, weakThis, response](auto phoneNum, auto code) {
+        auto pThis = weakThis.lock();
+        if (pThis != nullptr) {
+            pThis->phoneCodeMap.emplace(phoneNum, code);
+            response->set_success(true);
+            reactor->Finish(grpc::Status::OK);
+            return;
+        }
+        reactor->Finish(grpc::Status::CANCELLED);
+    };
+
+    aliSmsSupport.value().sendSmsAsync(request->phone_number(), code, std::move(callback));
+
+    return reactor;
+}
+
+
 grpc::Status
 AccountServiceImpl::VerifySmsCode(::grpc::ServerContext *context, const ::Authority::VerifySmsCodeRequest *request,
                                   ::Authority::VerifySmsCodeResponse *response) {
     return Service::VerifySmsCode(context, request, response);
 }
+
+grpc::ServerUnaryReactor *
+AccountServiceImpl::Register(::grpc::CallbackServerContext *context, const ::Authority::RegisterRequest *request,
+                             ::Authority::RegisterResponse *response) {
+    return WithCallbackMethod_Register::Register(context, request, response);
+}
+
+grpc::ServerUnaryReactor *
+AccountServiceImpl::Login(::grpc::CallbackServerContext *context, const ::Authority::LoginRequest *request,
+                          ::Authority::LoginResponse *response) {
+    return WithCallbackMethod_Login::Login(context, request, response);
+}
+
+
+grpc::ServerUnaryReactor *AccountServiceImpl::VerifySmsCode(::grpc::CallbackServerContext *context,
+                                                            const ::Authority::VerifySmsCodeRequest *request,
+                                                            ::Authority::VerifySmsCodeResponse *response) {
+    return WithCallbackMethod_VerifySmsCode::VerifySmsCode(context, request, response);
+}
+
+
+bool AccountServiceImpl::CheckSendSmsRequest(const ::Authority::SendSmsCodeRequest *request,
+                                             ::Authority::SendSmsCodeResponse *response) {
+    std::cout << request->DebugString() << std::endl;
+    //Check sms service available
+    if (!aliSmsSupport.has_value()) {
+        response->set_success(false);
+        response->set_message("Sms service not available");
+        return false;
+    }
+    //Check purpose
+    if (request->purpose() == Authority::SmsCodePurpose::UNKNOWN) {
+        response->set_success(false);
+        response->set_message("Witch purpose do you want to use this code?");
+        return false;
+    }
+    if (!Util::IsValidPhoneNumber(request->phone_number())) {
+        response->set_success(false);
+        response->set_message("Phone number not valid");
+        return false;
+    }
+    return true;
+}
+
 
 
 

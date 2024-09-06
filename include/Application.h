@@ -34,19 +34,16 @@ public:
                                     this->serverConfig.networkConfig.port);
     }
 
-
     ~Application();
 
     int run();
 
 private:
-
     ServerConfig serverConfig;
     std::string serverAddress;
     std::shared_ptr<grpc::Channel> pChannel;
-    std::unique_ptr<grpc::Server> pAccountService;
-    std::unique_ptr<grpc::Server> pHelloService;
-
+    std::shared_ptr<grpc::Service> pAccountService;
+    std::shared_ptr<grpc::Server> pGrpcServer;
 
     void createService();
 
