@@ -8,12 +8,14 @@
 #include <optional>
 #include "Authority.grpc.pb.h"
 #include "AliSmsSupport.h"
+#include "RedisConnection.h"
 
 class AccountServiceImpl final
         : public Authority::AccountService::CallbackService, public std::enable_shared_from_this<AccountServiceImpl> {
 public:
 
-    explicit AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig);
+    explicit AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig,
+                                const std::shared_ptr<RedisConnection> &redis);
 
     ~AccountServiceImpl()
     override;
@@ -49,7 +51,7 @@ public:
 private:
     std::optional<AliSmsSupport> aliSmsSupport;
     std::unordered_map<std::string, uint> phoneCodeMap;
-
+    std::shared_ptr<RedisConnection> pRedisConnection;
 
 private:
     bool CheckSendSmsRequest(const ::Authority::SendSmsCodeRequest *request,

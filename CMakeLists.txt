@@ -21,11 +21,20 @@ file(GLOB_RECURSE PROTO_SOURCES "${PROJECT_SOURCE_DIR}/proto/*.cc")
 add_library(BeforeDDLServerLib ${SOURCES} ${PROTO_SOURCES})
 add_executable(BeforeDDLServer ${SOURCES} ${PROTO_SOURCES})
 
+
+# 优先链接 /usr/local 中的库
+link_directories(/usr/local/lib)
+
+
+include_directories(/usr/local/include)
+include_directories(/usr/local/include/hiredis)
+
 # 链接依赖项
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(hiredis REQUIRED)
+find_package(libuv REQUIRED)
 
 if (hiredis_FOUND)
     message(STATUS "hiredis version: ${hiredis_VERSION}")
@@ -36,7 +45,9 @@ endif ()
 find_library(ALIBABA_CLOUD_SDK_DYSMSAPI_LIBRARY NAMES alibabacloud-sdk-dysmsapi PATHS /usr/lib/x86_64-linux-gnu)
 find_library(ALIBABA_CLOUD_SDK_CORE_LIBRARY NAMES alibabacloud-sdk-core PATHS /usr/lib/x86_64-linux-gnu)
 
+
 target_link_libraries(BeforeDDLServerLib hiredis)
+target_link_libraries(BeforeDDLServerLib libuv::uv)
 target_link_libraries(BeforeDDLServerLib nlohmann_json::nlohmann_json)
 target_link_libraries(BeforeDDLServerLib gRPC::grpc++ protobuf::libprotobuf gRPC::grpc++_reflection)
 target_link_libraries(BeforeDDLServerLib ${ALIBABA_CLOUD_SDK_DYSMSAPI_LIBRARY} ${ALIBABA_CLOUD_SDK_CORE_LIBRARY})

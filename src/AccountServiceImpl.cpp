@@ -6,8 +6,9 @@
 #include "Util.h"
 
 
-AccountServiceImpl::AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig) : aliSmsSupport(
-        std::make_optional<AliSmsSupport>(apiConfig, smsConfig)) {
+AccountServiceImpl::AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig,
+                                       const std::shared_ptr<RedisConnection> &redis) : aliSmsSupport(
+        std::make_optional<AliSmsSupport>(apiConfig, smsConfig)), pRedisConnection(redis) {
 }
 
 AccountServiceImpl::~AccountServiceImpl() { std::cout << "Current function: " << __func__ << std::endl; };
