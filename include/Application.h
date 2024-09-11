@@ -31,7 +31,7 @@ public:
     template<IsServerConfig T>
     explicit Application(T &&serverConfig) noexcept:serverConfig(std::forward<T>(serverConfig)) {
         serverAddress = std::format("{}:{}", this->serverConfig.networkConfig.ip,
-                                    this->serverConfig.networkConfig.port);
+                                    static_cast<unsigned int>(this->serverConfig.networkConfig.port));
     }
 
     ~Application();

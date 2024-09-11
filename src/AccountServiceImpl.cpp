@@ -45,7 +45,7 @@ grpc::Status
 AccountServiceImpl::SendSmsCode(::grpc::ServerContext *context, const ::Authority::SendSmsCodeRequest *request,
                                 ::Authority::SendSmsCodeResponse *response) {
 
-
+    std::cout << "Current function: " << __func__ << std::endl;
     if (!CheckSendSmsRequest(request, response)) {
         return grpc::Status::CANCELLED;
     }

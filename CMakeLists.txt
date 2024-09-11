@@ -6,7 +6,7 @@ project(BeforeDDLServer)
 #基础的项目设置
 include(CTest)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 
@@ -27,16 +27,20 @@ find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(hiredis REQUIRED)
 
-
+if (hiredis_FOUND)
+    message(STATUS "hiredis version: ${hiredis_VERSION}")
+else ()
+    message(FATAL_ERROR "hiredis not found")
+endif ()
 # 查找 Alibaba Cloud SDK
 find_library(ALIBABA_CLOUD_SDK_DYSMSAPI_LIBRARY NAMES alibabacloud-sdk-dysmsapi PATHS /usr/lib/x86_64-linux-gnu)
 find_library(ALIBABA_CLOUD_SDK_CORE_LIBRARY NAMES alibabacloud-sdk-core PATHS /usr/lib/x86_64-linux-gnu)
 
-
-target_link_libraries(BeforeDDLServerLib ${ALIBABA_CLOUD_SDK_DYSMSAPI_LIBRARY} ${ALIBABA_CLOUD_SDK_CORE_LIBRARY})
+target_link_libraries(BeforeDDLServerLib hiredis)
 target_link_libraries(BeforeDDLServerLib nlohmann_json::nlohmann_json)
 target_link_libraries(BeforeDDLServerLib gRPC::grpc++ protobuf::libprotobuf gRPC::grpc++_reflection)
-target_link_libraries(BeforeDDLServerLib hiredis)
+target_link_libraries(BeforeDDLServerLib ${ALIBABA_CLOUD_SDK_DYSMSAPI_LIBRARY} ${ALIBABA_CLOUD_SDK_CORE_LIBRARY})
+
 
 target_link_libraries(BeforeDDLServer BeforeDDLServerLib)
 
