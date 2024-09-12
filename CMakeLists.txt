@@ -36,18 +36,14 @@ find_package(gRPC CONFIG REQUIRED)
 find_package(hiredis REQUIRED)
 find_package(libuv REQUIRED)
 
-if (hiredis_FOUND)
-    message(STATUS "hiredis version: ${hiredis_VERSION}")
-else ()
-    message(FATAL_ERROR "hiredis not found")
-endif ()
+
 # 查找 Alibaba Cloud SDK
 find_library(ALIBABA_CLOUD_SDK_DYSMSAPI_LIBRARY NAMES alibabacloud-sdk-dysmsapi PATHS /usr/lib/x86_64-linux-gnu)
 find_library(ALIBABA_CLOUD_SDK_CORE_LIBRARY NAMES alibabacloud-sdk-core PATHS /usr/lib/x86_64-linux-gnu)
 
-
 target_link_libraries(BeforeDDLServerLib hiredis)
 target_link_libraries(BeforeDDLServerLib libuv::uv)
+
 target_link_libraries(BeforeDDLServerLib nlohmann_json::nlohmann_json)
 target_link_libraries(BeforeDDLServerLib gRPC::grpc++ protobuf::libprotobuf gRPC::grpc++_reflection)
 target_link_libraries(BeforeDDLServerLib ${ALIBABA_CLOUD_SDK_DYSMSAPI_LIBRARY} ${ALIBABA_CLOUD_SDK_CORE_LIBRARY})

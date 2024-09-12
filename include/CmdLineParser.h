@@ -16,6 +16,8 @@ public:
 private:
     static void printHelp();
     static ServerConfig parseConfigFile(const std::string_view &configFilePath);
+
+    static ServerConfig parseConfigFileWithBoost(const std::string_view &configFilePath);
 };
 
 

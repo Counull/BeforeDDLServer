@@ -18,7 +18,7 @@
 class AccountServiceImpl final
         : public Authority::AccountService::CallbackService, public std::enable_shared_from_this<AccountServiceImpl> {
 public:
-
+    static constexpr uint FIVE_MINUTES = 5 * 60;
     explicit AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig,
                                 const std::shared_ptr<RedisConnection> &redis);
 

@@ -7,10 +7,10 @@
 
 
 bool RedisConnection::connect() {
-    if (checkContext()) { return true; };
-
+    if (checkContext()) { return true; }; //检测是否已经连接
 
     context = redisAsyncConnect(config.ip.c_str(), config.port);
+
     if (!checkContext()) { return false; }
 
     auto loop = uv_default_loop();
@@ -66,8 +66,7 @@ void RedisConnection::DisconnectCallbackWrapper(const redisAsyncContext *c, int 
 
 }
 
-void RedisConnection::CallbackWrapper(redisAsyncContext *c, void *r, void *privdata) {
-    std::cout << __FUNCTION__ << std::endl;
+void RedisConnection::CmdCallbackWrapper(redisAsyncContext *c, void *r, void *privdata) {
     auto callBack = static_cast<RedisCommandCallback *>(privdata);
     if (!callBack) return;
     (*callBack)(static_cast<redisReply *>(r));
@@ -99,13 +98,22 @@ void RedisConnection::setConnectCallback(const RedisConnCallback &connectCallbac
 
 void
 RedisConnection::setKeyAsync(const std::string_view &key, const std::string_view &val,
-                             const RedisCommandCallback &callback) {
+                             const RedisCommandCallback &callback, uint ttl) {
     if (!checkContext() || !isAuth()) {
         return;
     }
-    int status = redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "SET %s %s",
-                                   key.data(),
-                                   val.data());
+    int status;
+    if (ttl == 0) {
+        status = redisAsyncCommand(context, CmdCallbackWrapper, new RedisCommandCallback(callback),
+                                   "SET %s %s",
+                                   key.data(), val.data());
+    } else {
+        status = redisAsyncCommand(context, CmdCallbackWrapper, new RedisCommandCallback(callback),
+                                   "SETEX %s %u %s",
+                                   key.data(), ttl, val.data());
+    }
+
+
     if (status != REDIS_OK) {
         std::cerr << "Failed to execute redisAsyncCommand: " << context->errstr << std::endl;
     }
@@ -116,17 +124,43 @@ void RedisConnection::getKeyAsync(const std::string_view &key, const RedisComman
     if (!checkContext() || !isAuth()) {
         return;
     }
-    redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "GET %s", key.data());
+    redisAsyncCommand(context, CmdCallbackWrapper, new RedisCommandCallback(callback), "GET %s", key.data());
 }
+
+void RedisConnection::setKeyAsyncThreadSafe(const std::string &key, const std::string &val,
+                                            const RedisCommandCallback &callback, uint ttl) {
+
+    threadSafeCall([this, key, val, callback, ttl]() {
+        setKeyAsync(key, val, callback, ttl);
+    });
+
+}
+
+void RedisConnection::getKeyAsyncThreadSafe(const std::string_view &key, const RedisCommandCallback &callback) {
+    threadSafeCall([this, key, callback]() {
+        getKeyAsync(key, callback);
+    });
+}
+
+
+void RedisConnection::threadSafeCall(const std::function<void()> &&func) {
+    {
+        std::lock_guard<std::mutex> lock(queueMutex);
+        taskQueue.emplace(func);
+    }
+
+    uv_async_send(&async);
+}
+
 
 void RedisConnection::authAsync(const RedisCommandCallback &callback) {
 
-    redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "AUTH %s",
+    redisAsyncCommand(context, CmdCallbackWrapper, new RedisCommandCallback(callback), "AUTH %s",
                       config.password.c_str());
 }
 
 void RedisConnection::selectDB(u_int16_t index, const RedisCommandCallback &callback) {
-    redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "SELECT %u",
+    redisAsyncCommand(context, CmdCallbackWrapper, new RedisCommandCallback(callback), "SELECT %u",
                       index);
 }
 
@@ -144,26 +178,7 @@ void RedisConnection::asyncCallback(uv_async_t *handle) {
     }
 }
 
-void RedisConnection::setKeyAsyncThreadSafe(const std::string &key, const std::string &val,
-                                            const RedisCommandCallback &callback) {
-    {
-        std::lock_guard<std::mutex> lock(queueMutex);
-        taskQueue.push([this, key, val, callback]() {
-            setKeyAsync(key, val, callback);
-        });
-    }
-    uv_async_send(&async);
-}
 
-void RedisConnection::getKeyAsyncThreadSafe(const std::string_view &key, const RedisCommandCallback &callback) {
-    {
-        std::lock_guard<std::mutex> lock(queueMutex);
-        taskQueue.push([this, key, callback]() {
-            getKeyAsync(key, callback);
-        });
-    }
-    uv_async_send(&async);
-}
 
 
 

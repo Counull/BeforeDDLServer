@@ -29,7 +29,6 @@ class RedisConnection {
 public:
     template<RedisConfigType RCT>
     explicit RedisConnection(RCT &&config): config(std::forward<RedisConfig>(config)) {
-
     }
 
     ~RedisConnection();
@@ -38,11 +37,15 @@ public:
 
     bool checkContext() const noexcept;
 
-    void setKeyAsyncThreadSafe(const std::string &key, const std::string &val, const RedisCommandCallback &callback);
+    void setKeyAsyncThreadSafe(const std::string &key, const std::string &val, const RedisCommandCallback &callback,
+                               uint ttl = 0);
 
     void getKeyAsyncThreadSafe(const std::string_view &key, const RedisCommandCallback &callback);
 
-    void setKeyAsync(const std::string_view &key, const std::string_view &val, const RedisCommandCallback &callback);
+    void threadSafeCall(const std::function<void()> &&func);
+
+    void setKeyAsync(const std::string_view &key, const std::string_view &val, const RedisCommandCallback &callback,
+                     uint ttl = 0);
 
     void getKeyAsync(const std::string_view &key, const RedisCommandCallback &callback);
 
@@ -78,7 +81,7 @@ private:
 
     static void DisconnectCallbackWrapper(const redisAsyncContext *c, int status);
 
-    static void CallbackWrapper(redisAsyncContext *c, void *r, void *privdata);
+    static void CmdCallbackWrapper(redisAsyncContext *c, void *r, void *privdata);
 
     static void asyncCallback(uv_async_t *handle);
 
