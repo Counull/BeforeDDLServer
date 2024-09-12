@@ -43,7 +43,7 @@ public:
 private:
     ServerConfig serverConfig;
     std::string serverAddress;
-    std::shared_ptr<RedisConnection> redisConnection;
+    std::shared_ptr<RedisConnection> pRedisConnection;
     std::shared_ptr<grpc::Channel> pChannel;
     std::shared_ptr<grpc::Service> pAccountService;
     std::shared_ptr<grpc::Server> pGrpcServer;

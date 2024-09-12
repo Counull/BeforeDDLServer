@@ -71,7 +71,7 @@ public:
     std::string ip;
     u_int16_t port;
     std::string password;
-
+    u_int16_t dbIndex;
     RedisConfig() : ip("localhost"), port(6379) {
     }
 

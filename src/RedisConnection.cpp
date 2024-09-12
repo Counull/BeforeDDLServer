@@ -13,8 +13,13 @@ bool RedisConnection::connect() {
     context = redisAsyncConnect(config.ip.c_str(), config.port);
     if (!checkContext()) { return false; }
 
+    auto loop = uv_default_loop();
+    async.data = this;
     context->data = this;
-    redisLibuvAttach(context, uv_default_loop());
+
+    uv_async_init(loop, &async, asyncCallback);
+
+    redisLibuvAttach(context, loop);
     redisAsyncSetTimeout(context, (struct timeval) {1, 500000});
     redisAsyncSetConnectCallback(context, &RedisConnection::ConnectCallbackWrapper);
     redisAsyncSetDisconnectCallback(context, &RedisConnection::DisconnectCallbackWrapper);
@@ -37,11 +42,16 @@ bool RedisConnection::checkContext() const noexcept {
 void RedisConnection::ConnectCallbackWrapper(const redisAsyncContext *c, int status) {
     auto thisPtr = static_cast<RedisConnection *>(c->data);
     if (!thisPtr) return;
-    thisPtr->AuthAsync([thisPtr, c, status](auto reply) {
+
+    thisPtr->authAsync([thisPtr, c, status](auto reply) {
         std::cout << "Auth reply " << reply->str << std::endl;
+
         if (RedisConnection::ReplyIsOK(reply)) {
             thisPtr->auth = true;
-            thisPtr->connectCallback(c, status);
+            thisPtr->selectDB(thisPtr->config.dbIndex, [thisPtr, c, status](auto reply) {
+                std::cout << "selectDB " << reply->str << std::endl;
+            });
+
             return;
         }
     });
@@ -93,25 +103,68 @@ RedisConnection::setKeyAsync(const std::string_view &key, const std::string_view
     if (!checkContext() || !isAuth()) {
         return;
     }
-    redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "SET %s %s", key.data(),
-                      val.data());
+    int status = redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "SET %s %s",
+                                   key.data(),
+                                   val.data());
+    if (status != REDIS_OK) {
+        std::cerr << "Failed to execute redisAsyncCommand: " << context->errstr << std::endl;
+    }
 }
 
-void RedisConnection::GetKeyAsync(const std::string_view &key, const RedisCommandCallback &callback) {
+void RedisConnection::getKeyAsync(const std::string_view &key, const RedisCommandCallback &callback) {
+
     if (!checkContext() || !isAuth()) {
         return;
     }
     redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "GET %s", key.data());
 }
 
-void RedisConnection::AuthAsync(const RedisCommandCallback &callback) {
+void RedisConnection::authAsync(const RedisCommandCallback &callback) {
+
     redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "AUTH %s",
                       config.password.c_str());
 }
 
-bool RedisConnection::isAuth() const {
-    return auth;
+void RedisConnection::selectDB(u_int16_t index, const RedisCommandCallback &callback) {
+    redisAsyncCommand(context, CallbackWrapper, new RedisCommandCallback(callback), "SELECT %u",
+                      index);
 }
+
+void RedisConnection::asyncCallback(uv_async_t *handle) {
+    auto *thisPtr = static_cast<RedisConnection *>(handle->data);
+    std::queue<std::function<void()>> tasks;
+    {
+        std::lock_guard<std::mutex> lock(thisPtr->queueMutex);
+        std::swap(tasks, thisPtr->taskQueue);
+    }
+
+    while (!tasks.empty()) {
+        tasks.front()();
+        tasks.pop();
+    }
+}
+
+void RedisConnection::setKeyAsyncThreadSafe(const std::string &key, const std::string &val,
+                                            const RedisCommandCallback &callback) {
+    {
+        std::lock_guard<std::mutex> lock(queueMutex);
+        taskQueue.push([this, key, val, callback]() {
+            setKeyAsync(key, val, callback);
+        });
+    }
+    uv_async_send(&async);
+}
+
+void RedisConnection::getKeyAsyncThreadSafe(const std::string_view &key, const RedisCommandCallback &callback) {
+    {
+        std::lock_guard<std::mutex> lock(queueMutex);
+        taskQueue.push([this, key, callback]() {
+            getKeyAsync(key, callback);
+        });
+    }
+    uv_async_send(&async);
+}
+
 
 
 

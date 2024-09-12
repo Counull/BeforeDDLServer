@@ -12,7 +12,6 @@ int Application::run() {
     grpc::EnableDefaultHealthCheckService(true);
     grpc::reflection::InitProtoReflectionServerBuilderPlugin();
 
-
     uv_loop_t *loop = uv_default_loop();
 
     // Initialize the loop
@@ -27,15 +26,22 @@ int Application::run() {
 
     }
     createService();
+
     uv_run(loop, UV_RUN_DEFAULT);
+
+
+
+
     pGrpcServer->Shutdown();
+
     uv_loop_close(loop);
     return 0;
 }
 
 void Application::createService() {
+
     pAccountService = std::make_shared<AccountServiceImpl>(serverConfig.aliApiConfig, serverConfig.smsConfig,
-                                                           redisConnection);
+                                                           pRedisConnection);
     grpc::SslServerCredentialsOptions sslOpts;
     auto privateKey = Util::ReadFile(serverConfig.sslConfig.keyPath);
     auto certificate = Util::ReadFile(serverConfig.sslConfig.certPath);
@@ -52,18 +58,18 @@ void Application::createService() {
 
 bool Application::connectToRedis() {
 
-    redisConnection = std::make_shared<RedisConnection>(this->serverConfig.redisConfig);
+    pRedisConnection = std::make_shared<RedisConnection>(this->serverConfig.redisConfig);
 
-    redisConnection->setConnectCallback([](auto context, auto status) {
+    pRedisConnection->setConnectCallback([](auto context, auto status) {
         std::cout << "Call bake in application" << " redis connected" << std::endl;
 
     });
-    redisConnection->setDisconnectCallback([](auto context, auto status) {
+    pRedisConnection->setDisconnectCallback([](auto context, auto status) {
         std::cout << "Call bake in application" << " redis disconnect" << std::endl;
     });
 
 
-    if (!redisConnection->connect()) {
+    if (!pRedisConnection->connect()) {
         std::cerr << "Failed to connect to redis" << std::endl;
         return false;
     }

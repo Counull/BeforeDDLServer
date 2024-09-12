@@ -6,6 +6,7 @@
 #define BEFOREDDLSERVER_REDISCONNECTION_H
 
 #include <iostream>
+#include <queue>
 #include <string>
 #include <memory>
 #include <functional>
@@ -14,7 +15,7 @@
 #include <adapters/libuv.h>
 #include <hiredis.h>
 #include <async.h>
-
+#include <thread>
 #include "Config.h"
 
 using RedisConnCallback = std::function<redisConnectCallback>;
@@ -28,6 +29,7 @@ class RedisConnection {
 public:
     template<RedisConfigType RCT>
     explicit RedisConnection(RCT &&config): config(std::forward<RedisConfig>(config)) {
+
     }
 
     ~RedisConnection();
@@ -36,33 +38,40 @@ public:
 
     bool checkContext() const noexcept;
 
+    void setKeyAsyncThreadSafe(const std::string &key, const std::string &val, const RedisCommandCallback &callback);
+
+    void getKeyAsyncThreadSafe(const std::string_view &key, const RedisCommandCallback &callback);
 
     void setKeyAsync(const std::string_view &key, const std::string_view &val, const RedisCommandCallback &callback);
 
-    void GetKeyAsync(const std::string_view &key, const RedisCommandCallback &callback);
+    void getKeyAsync(const std::string_view &key, const RedisCommandCallback &callback);
 
 
     void setDisconnectCallback(const RedisConnDisconnectCallback &disconnectCallback);
 
     void setConnectCallback(const RedisConnCallback &connectCallback);
 
+    void selectDB(u_int16_t index, const RedisCommandCallback &callback);
+
     static inline bool ReplyIsOK(redisReply *reply) noexcept {
         return reply->type == REDIS_REPLY_STATUS && strcmp(reply->str, "OK") == 0;
     }
 
-
+    inline bool isAuth() const { return auth; };
 private:
 
     RedisConfig config;
     redisAsyncContext *context{};
     RedisConnCallback connectCallback;
     RedisConnDisconnectCallback disconnectCallback;
+    uv_async_t async;
+    std::mutex queueMutex;
+    std::queue<std::function<void()>> taskQueue;
     bool auth = false;
-public:
-    bool isAuth() const;
+
 
 private:
-    void AuthAsync(const RedisCommandCallback &callback);
+    void authAsync(const RedisCommandCallback &callback);
 
 
     static void ConnectCallbackWrapper(const redisAsyncContext *c, int status);
@@ -70,6 +79,8 @@ private:
     static void DisconnectCallbackWrapper(const redisAsyncContext *c, int status);
 
     static void CallbackWrapper(redisAsyncContext *c, void *r, void *privdata);
+
+    static void asyncCallback(uv_async_t *handle);
 
 };
 

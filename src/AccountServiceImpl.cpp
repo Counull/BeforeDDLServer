@@ -9,6 +9,7 @@
 AccountServiceImpl::AccountServiceImpl(const AliApiConfig &apiConfig, const SMSConfig &smsConfig,
                                        const std::shared_ptr<RedisConnection> &redis) : aliSmsSupport(
         std::make_optional<AliSmsSupport>(apiConfig, smsConfig)), pRedisConnection(redis) {
+    std::cout << pRedisConnection.get() << "  " << redis.get() << std::endl;
 }
 
 AccountServiceImpl::~AccountServiceImpl() { std::cout << "Current function: " << __func__ << std::endl; };
@@ -78,9 +79,22 @@ AccountServiceImpl::SendSmsCode(::grpc::CallbackServerContext *context, const ::
     auto callback = [reactor, weakThis, response](auto phoneNum, auto code) {
         auto pThis = weakThis.lock();
         if (pThis != nullptr) {
-            pThis->phoneCodeMap.emplace(phoneNum, code);
-            response->set_success(true);
-            reactor->Finish(grpc::Status::OK);
+            pThis->pRedisConnection->getKeyAsyncThreadSafe("123123",
+                                                           [](auto rep) {
+                                                               std::cout << "Redis reply:GET " << rep << std::endl;
+                                                           });
+            pThis->pRedisConnection->setKeyAsyncThreadSafe(phoneNum, std::to_string(code),
+                                                           [reactor, weakThis, response](auto reply) {
+                                                               std::cout << "Redis reply:SET " << std::endl;
+                                                               if (RedisConnection::ReplyIsOK(reply)) {
+                                                                   response->set_success(true);
+                                                                   reactor->Finish(grpc::Status::OK);
+                                                                   return;
+                                                               }
+                                                               response->set_success(false);
+                                                               reactor->Finish(grpc::Status::CANCELLED);
+                                                           });
+
             return;
         }
         reactor->Finish(grpc::Status::CANCELLED);
@@ -140,6 +154,7 @@ bool AccountServiceImpl::CheckSendSmsRequest(const ::Authority::SendSmsCodeReque
     }
     return true;
 }
+
 
 
 
