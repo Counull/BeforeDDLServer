@@ -19,19 +19,12 @@ int Application::run() {
         std::cerr << "Failed to initialize libuv loop" << std::endl;
         return false;
     }
-
-
+    
     if (connectToRedis()) {
         std::cout << "Connected to redis" << std::endl;
-
     }
     createService();
-
     uv_run(loop, UV_RUN_DEFAULT);
-
-
-
-
     pGrpcServer->Shutdown();
 
     uv_loop_close(loop);
