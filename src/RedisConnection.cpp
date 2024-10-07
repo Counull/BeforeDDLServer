@@ -67,7 +67,7 @@ void RedisConnection::DisconnectCallbackWrapper(const redisAsyncContext *c, int 
 }
 
 void RedisConnection::CmdCallbackWrapper(redisAsyncContext *c, void *r, void *privdata) {
-    std::unique_ptr<RedisCommandCallback> callBack(static_cast<RedisCommandCallback *>(privdata));
+    std::unique_ptr<RedisCommandCallback> callBack(static_cast<RedisCommandCallback*>(privdata));
     if (!callBack) return;
     //很显然这里直接用裸指针回调发生错误会导致内存泄漏
     (*callBack)(static_cast<redisReply *>(r));
